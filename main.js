@@ -6,13 +6,14 @@ function main(){
 
     var vertexShaderSource = `
     void main(){
-
+        gl_PointSize = 73.0;
+        gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
     }
     `;
 
     var fragmentShaderSource = `
     void main(){
-
+        gl_FragColor = vec4(0.8, 0.0, 0.2, 1.0);
     }
     `;
 
@@ -41,8 +42,11 @@ function main(){
     gl.useProgram(shaderProgram);
 
     // milih warna dasar 
-    gl.clearColor(0, 0, 0, 1);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
     // eksekusi pewarnaan :
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    // nambahin titik
+    gl.drawArrays(gl.POINTS, 0, 1);
 }
