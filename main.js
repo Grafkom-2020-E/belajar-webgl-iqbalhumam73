@@ -1,52 +1,65 @@
-// di sini akan buat fungsi2 
+function main() {
+  var canvas = document.getElementById("myCanvas");
+  var gl = canvas.getContext("webgl");
 
-function main(){
-    var canvas = document.getElementById("myCanvas");
-    var gl  = canvas.getContext("webgl");
+  // Definisi data verteks 3 buah titik
+  /**
+   * Titik A (-0.5, -0.5)
+   * Titik B ( 0.5, -0.5)
+   * Titik C ( 0.5,  0.5)
+   */
+  var vertices = [
+    -0.5, -0.5,       // Titik A
+    0.5, -0.5,        // Titik B
+    0.5, 0.5          // Titik C
+  ];
 
-    var vertexShaderSource = `
-    void main(){
-        gl_PointSize = 73.0;
-        gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
-    }
-    `;
+  var vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-    var fragmentShaderSource = `
-    void main(){
-        gl_FragColor = vec4(0.8, 0.0, 0.2, 1.0);
-    }
-    `;
+  var vertexShaderSource = document.getElementById("vertexShaderSource").text;
+  var fragmentShaderSource = document.getElementById("fragmentShaderSource").text;
 
-    // membuat .c di gpu
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertexShader, vertexShaderSource);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragmentShader, fragmentShaderSource);
+  // Buat .c di GPU
+  var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vertexShader, vertexShaderSource);
+  var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(fragmentShader, fragmentShaderSource);
+  // Kompilasi .c agar menjadi .o
+  gl.compileShader(vertexShader);
+  gl.compileShader(fragmentShader);
+  // Siapkan wadah untuk .exe (shader program)
+  var shaderProgram = gl.createProgram();
+  // Masukkan .o ke dalam wadah .exe
+  gl.attachShader(shaderProgram, vertexShader);
+  gl.attachShader(shaderProgram, fragmentShader);
+  // Sambungkan antar .o agar bisa menjadi
+  //    runnable context di dalam wadah .exe tadi
+  gl.linkProgram(shaderProgram);
+  // Mulai menggunakan konteks (cat)
+  gl.useProgram(shaderProgram);
 
-    // kompilasi .c agar menjadi .o
-    gl.compileShader(vertexShader);
-    gl.compileShader(fragmentShader);
+  // Ajarkan attribute a_Position di GPU
+  //  tentang pengambilan data verteks dari ARRAY_BUFFER
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  var aPositionLoc = gl.getAttribLocation(shaderProgram, "a_Position");
+  gl.vertexAttribPointer(
+    aPositionLoc, 
+    2, 
+    gl.FLOAT, 
+    false, 
+    0, 
+    0);
+  gl.enableVertexAttribArray(aPositionLoc);
+  gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
-    // menyiapkan wadah untuk .exe nya (shader program)
-    var shaderProgram = gl.createProgram();
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // masukkan .0 ke dalam wadah .exe
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-
-    // campur antar .o agar menjadi runnable context
-    // cat siap pakai atau di dalam .exe tadi
-    gl.linkProgram(shaderProgram);
-
-    // Mulai menggunakan context / cat 
-    gl.useProgram(shaderProgram);
-
-    // milih warna dasar 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0);
-
-    // eksekusi pewarnaan :
-    gl.clear(gl.COLOR_BUFFER_BIT);
-
-    // nambahin titik
-    gl.drawArrays(gl.POINTS, 0, 1);
+  var primitive = gl.POINTS;
+  var offset = 0;
+  var nVertex = 3;
+  gl.drawArrays(primitive, offset, nVertex);
 }
