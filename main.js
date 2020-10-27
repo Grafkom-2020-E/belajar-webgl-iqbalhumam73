@@ -58,7 +58,7 @@ function main() {
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
 
-  var primitive = gl.TRIANGLE_FAN;
+  var primitive = gl.TRIANGLE_STRIP;
   var offset = 0;
   var nVertex = 3;
   gl.drawArrays(primitive, offset, nVertex);
