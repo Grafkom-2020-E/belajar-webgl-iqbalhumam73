@@ -15,7 +15,7 @@ function main() {
     0.5, 0.5, 0.0, 1.0, 1.0,         // Titik C
     0.5, 0.5, 0.0, 0.0, 0.0,         // Titik C
     -0.5,  0.5, 0.0, 0.0, 1.0,       // TItik D
-    -0.5, -0.5, 1.0, 1.0, 1.0       // Titik A
+    -0.5, -0.5, 0.0, 1.0, 1.0       // Titik A
   ];
 
   var vertexBuffer = gl.createBuffer();
