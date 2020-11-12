@@ -70,9 +70,15 @@ function main() {
 
   gl.clearColor(0.0, 0.0, 0.0, 1.0);
   gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.viewport(100, 0, canvas.height, canvas.height);
 
   var primitive = gl.TRIANGLES;
   var offset = 0;
   var nVertex = 6;
+
+  var uD = gl.getUniformLocation(shaderProgram, 'u_d');
+  var d = [0.5, 0.5];
+  gl.uniform2fv(uD, d);
+
   gl.drawArrays(primitive, offset, nVertex);
 }
